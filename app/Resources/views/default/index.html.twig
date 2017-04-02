@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            {% for type, flashes in app.session.flashbag.all %}
+                {% for flash in flashes %}
+                    <div class="alert alert-{{ type }} fade in">
+                        {{ flash }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <form action="{{ path('create') }}" class="form form-inline">
+                <h1>Create Message</h1>
+                <div class="form-group">
+                    <label for="sender">Sender</label>
+                    <input id="sender" type="text" name="sender" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="recipient">Recipient</label>
+                    <input id="recipient" type="text" name="recipient" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Add">
+                </div>
+            </form>
+            <hr>
+            {% for message in messages %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>Message</h1>
+                        {{ dump(message) }}
+                        <a href="{{ path('send', {uuid: message.uuid }) }}" class="btn btn-primary">Send</a>
+                        <a href="{{ path('read', {uuid: message.uuid }) }}" class="btn btn-primary">Read</a>
+                        <a href="{{ path('archive', {uuid: message.uuid }) }}" class="btn btn-primary">Archived</a>
+                        <a href="{{ path('delete', {uuid: message.uuid }) }}" class="btn btn-danger">Delete</a>
+                    </div>
+                    <div class="col-md-6">
+                        <h1>Events</h1>
+                        {% for event in message.events %}
+                        {{ dump(event) }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    h1 { font-size: 21px; line-height: 1.2; margin: 0 0 .5em; }
+    code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
+    #wrapper { background: #FFF; margin: 1em auto; max-width: 800px; width: 95%; }
+    #container { padding: 2em; }
+    hr { border-color: #ccc; }
+    .form-group { margin-right: 25px; }
+</style>
+{% endblock %}
